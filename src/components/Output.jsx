@@ -12,12 +12,13 @@ const Output = ({ editorRef, language }) => {
     const sourceCode = editorRef.current.getValue();
     if (!sourceCode) return;
 
-    const match = codeString.match(/#\S+/);
+    const match = sourceCode.match(/#\S+/);
     const currentQuestion = match ? match[0].slice(1) : null;
 
     try {
       setIsLoading(true);
       const {data: response} = await executeCode(language, currentQuestion, sourceCode);
+      console.log(response);
       setOutput(response.result);
       // result.stderr ? setIsError(true) : setIsError(false);
     } catch (error) {
@@ -56,7 +57,7 @@ const Output = ({ editorRef, language }) => {
         borderColor={isError ? "red.500" : "#333"}
       >
         {output
-          ? output.map((line, i) => <Text key={i}>{line}</Text>)
+          ? <Text>{output}</Text>
           : 'Click "Run Code" to see the output here'}
       </Box>
     </Box>
