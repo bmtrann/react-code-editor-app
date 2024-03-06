@@ -11,11 +11,15 @@ const Output = ({ editorRef, language }) => {
   const runCode = async () => {
     const sourceCode = editorRef.current.getValue();
     if (!sourceCode) return;
+
+    const match = codeString.match(/#\S+/);
+    const currentQuestion = match ? match[0].slice(1) : null;
+
     try {
       setIsLoading(true);
-      const { run: result } = await executeCode(language, sourceCode);
-      setOutput(result.output.split("\n"));
-      result.stderr ? setIsError(true) : setIsError(false);
+      const {data: response} = await executeCode(language, currentQuestion, sourceCode);
+      setOutput(response.result);
+      // result.stderr ? setIsError(true) : setIsError(false);
     } catch (error) {
       console.log(error);
       toast({
